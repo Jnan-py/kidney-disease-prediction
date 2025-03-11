@@ -30,8 +30,6 @@ This repository contains a deep learning–based application that predicts kidne
    cd kidney-disease-prediction
    ```
 
-````
-
 2. **Create a Virtual Environment (Recommended):**
 
    ```bash

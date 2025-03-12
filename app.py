@@ -51,13 +51,21 @@ if uploaded_file is not None:
     
     image_tensor = transform(image).unsqueeze(0)  
 
-    with torch.no_grad():
-        outputs = model(image_tensor)
-        probabilities = F.softmax(outputs, dim=1)
-        prob, pred_idx = torch.max(probabilities, dim=1)
-
-    pred_class = classes[pred_idx.item()]
-
     with col2:
-        st.write(f"**Predicted Disease Type:** {pred_class}")
-        st.write(f"**Prediction Confidence:** {prob.item()*100:.2f}%")
+        conf_level = st.slider("Probability Score", min_value=0, max_value = 100, value = 65)
+
+        if st.button("Identify"):
+            with torch.no_grad():
+                outputs = model(image_tensor)
+                probabilities = F.softmax(outputs, dim=1)
+                prob, pred_idx = torch.max(probabilities, dim=1)    
+
+            if conf_level <= prob.item()*100:
+
+                pred_class = classes[pred_idx.item()]
+
+                st.write(f"**Predicted Disease Type:** {pred_class}")
+                st.write(f"**Prediction Confidence:** {prob.item()*100:.2f}%")
+
+            else:
+                st.write("The disease cannot be identified for the given Probability Score")
